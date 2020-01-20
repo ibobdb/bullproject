@@ -23,7 +23,7 @@ if (empty($_SESSION['ss_user'])) {
             $r = mysqli_query($conn, $query);
             if ($t = mysqli_num_rows($r) > 0) {
 
-                echo "<option value='0'>Pilih Game</option>";
+                echo "<option value=''>Pilih Game</option>";
                 while ($rm = mysqli_fetch_array($r)) {
 
                     echo "<option value='$rm[id_game]'>$rm[nama_game]</option>";
@@ -83,37 +83,44 @@ if (empty($_SESSION['ss_user'])) {
                     echo "<li> VGA  :$rg[nama_gpu]</li>";
                     echo "<li> RAM  :$rg[nama_ram]</li>";
                 }
-                $cek = mysqli_query($conn, "SELECT * FROM user, game WHERE id_game='$id'");
+                $cek = mysqli_query($conn, "SELECT * FROM user, game WHERE id_game='$id' AND nama_user='$_SESSION[ss_user]'");
                 while ($ck = mysqli_fetch_array($cek)) {
+                    if ($ck['ram_user'] == 0) {
+                        $h5 = "Data pc anda belum ditambahkan";
+                        echo "
+                            <script>    
+                                alert('Data pc anda belum ditambahkan');
+                                document.location.href='?p=spek';
+                                
+                                </script>";
+                        break;
+                    } else {
+                        if ($ck['ram_user'] >= $ck['ram_gm']) {
 
-                    if ($ck['ram_user'] >= $ck['ram_gm']) {
+                            if ($ck['cpu_user'] >= $ck['cpu_gm']) {
 
-                        if ($ck['cpu_user'] >= $ck['cpu_gm']) {
+                                if ($ck['gpu_user'] >= $ck['gpu_gm']) {
 
-                            if ($ck['gpu_user'] >= $ck['gpu_gm']) {
-
-                                $ha1 = "Game bisa dijalankan";
-                                break;
+                                    $ha1 = "Game bisa dijalankan";
+                                    break;
+                                } else {
+                                    $ha2 = "VGA anda kurang untuk menjalankan game ini";
+                                    break;
+                                }
                             } else {
-                                $ha2 = "VGA anda kurang untuk menjalankan game ini";
+                                $ha3 = "Prosesor anda kurang untuk menjalankan game ini";
                                 break;
                             }
                         } else {
-                            $ha3 = "Prosesor anda kurang untuk menjalankan game ini";
-                            break;
-                        }
-                    } else {
-                        if ($ck['ram_user'] == 0) {
-                            $h5 = "Data pc anda belum ditambahkan";
-                            break;
-                        } else {
+
                             $ha4 = " pc anda burik";
                             break;
                         }
                     }
                 }
             } else {
-                echo "tidak ada game";
+                echo "<h1>Ahhh Shit!!</h1>";
+                $ha6 = "Silahkan Pilih Game";
             }
         }
 
@@ -125,11 +132,13 @@ if (empty($_SESSION['ss_user'])) {
 </div>
 <div class="alert alert-<?php if ($ha1 == true) {
                             echo "success";
+                        } elseif ($ha6 == true) {
+                            echo "warning";
                         } else {
                             echo "danger";
                         } ?> text-center" role="alert">
     <?php
-    echo "$ha1 $ha2 $ha3 $ha4 $h5";
+    echo "$ha1 $ha2 $ha3 $ha4 $h5 $ha6";
 
     ?>
 </div>

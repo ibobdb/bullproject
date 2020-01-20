@@ -93,6 +93,8 @@ error_reporting(E_ERROR | E_PARSE);
                         include "spek.php";
                     } elseif ($_GET['p'] === "edit") {
                         include "edit.php";
+                    } elseif ($_GET['id'] == 0) {
+                        include "game.php";
                     } else {
                         include "home.php";
                     }
