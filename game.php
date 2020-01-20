@@ -23,7 +23,7 @@ if (empty($_SESSION['ss_user'])) {
             $r = mysqli_query($conn, $query);
             if ($t = mysqli_num_rows($r) > 0) {
 
-                echo "<option value=''>Pilih Game</option>";
+                echo "<option value='00'>Pilih Game</option>";
                 while ($rm = mysqli_fetch_array($r)) {
 
                     echo "<option value='$rm[id_game]'>$rm[nama_game]</option>";
@@ -71,6 +71,10 @@ if (empty($_SESSION['ss_user'])) {
 
         <?php
         if (isset($_GET['pilih'])) {
+            if ($_GET['id'] == 00) {
+                echo "<h1>Ahhh Shit!!</h1>";
+                $ha6 = "Silahkan Pilih Game";
+            }
             if ($_GET['id']) {
 
                 $li = mysqli_query($conn, "SELECT * FROM game JOIN ram ON game.ram_gm = ram.id_ram
@@ -118,10 +122,10 @@ if (empty($_SESSION['ss_user'])) {
                         }
                     }
                 }
-            } else {
-                echo "<h1>Ahhh Shit!!</h1>";
-                $ha6 = "Silahkan Pilih Game";
             }
+        } else {
+            echo "<h1>Ahhh Shit!!</h1>";
+            $ha6 = "Silahkan Pilih Game";
         }
 
 
